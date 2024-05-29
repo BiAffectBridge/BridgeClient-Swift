@@ -248,7 +248,8 @@ extension NativeScheduledSessionWindow {
                                  performanceOrder: performanceOrder,
                                  timeWindowGuids: nil,
                                  minutesToComplete: nil,
-                                 notifications: nil,
+                                 notifications: nil, 
+                                 repeatTimeWindow: nil,
                                  type: "SessionInfo"),
               startEventId: "timeline_retreived")
     }

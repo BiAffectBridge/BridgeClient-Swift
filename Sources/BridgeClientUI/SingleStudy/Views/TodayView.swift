@@ -275,7 +275,7 @@ extension NativeScheduledSessionWindow {
 
 extension SessionInfo {
     convenience init(guid: String, performanceOrder: PerformanceOrder) {
-        self.init(guid: guid, label: "Some Activities", symbol: nil, performanceOrder: performanceOrder, timeWindowGuids: nil, minutesToComplete: nil, notifications: nil, type: "SessionInfo")
+        self.init(guid: guid, label: "Some Activities", symbol: nil, performanceOrder: performanceOrder, timeWindowGuids: nil, minutesToComplete: nil, notifications: nil, repeatTimeWindow: nil, type: "SessionInfo")
     }
 }
 
