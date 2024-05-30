@@ -32,7 +32,7 @@ let package = Package(
         .package(url: "https://github.com/BiAffectBridge/BridgeArchiver-Swift.git",
                  from: "0.4.0"),
         .package(url: "https://github.com/BiAffectBridge/JsonModel-Swift.git",
-                 "2.2.0"..<"2.3.0"),
+                 from: "2.2.0"),
         .package(url: "https://github.com/BiAffectBridge/AssessmentModel-Swift.git",
                  from: "1.2.0"),
     ],
@@ -40,21 +40,19 @@ let package = Package(
         // Targets are the basic building blocks of a package. A target can define a module or a test suite.
         // Targets can depend on other targets in this package, and on products in packages this package depends on.
         .binaryTarget(name: "BridgeClient",
-                      path: "SwiftPackage/Binaries/release/BridgeClient.xcframework"),
+                      path: "Binaries/release/BridgeClient.xcframework"),
         
         .target(name: "BridgeClientExtension",
                 dependencies: [
                     "BridgeClient",
                     .product(name: "BridgeArchiver", package: "BridgeArchiver-Swift"),
                     .product(name: "JsonModel", package: "JsonModel-Swift"),
-                ],
-                path: "SwiftPackage/Sources/BridgeClientExtension"),
+                ]),
         .testTarget(name: "BridgeClientExtensionTests",
                     dependencies: [
                         "BridgeClient",
                         "BridgeClientExtension",
                     ],
-                    path: "SwiftPackage/Tests/BridgeClientExtensionTests",
                     resources: [.process("Resources")]),
         
         .target(name: "BridgeClientUI",
@@ -65,13 +63,11 @@ let package = Package(
                     .product(name: "AssessmentModel", package: "AssessmentModel-Swift"),
                     .product(name: "AssessmentModelUI", package: "AssessmentModel-Swift"),
                 ],
-                path: "SwiftPackage/Sources/BridgeClientUI",
                 resources: [.process("Resources")]),
         .testTarget(name: "BridgeClientUITests",
                     dependencies: [
                         "BridgeClient",
                         "BridgeClientUI",
-                    ],
-                    path: "SwiftPackage/Tests/BridgeClientUITests"),
+                    ]),
     ]
 )
