@@ -1,0 +1,61 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "AssessmentModel",
+        "repositoryURL": "https://github.com/BiAffectBridge/AssessmentModel-Swift.git",
+        "state": {
+          "branch": null,
+          "revision": "8f085a7fe1b53d8feeea54accf1ceb3b43f1ba84",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "BridgeArchiver",
+        "repositoryURL": "https://github.com/BiAffectBridge/BridgeArchiver-Swift.git",
+        "state": {
+          "branch": null,
+          "revision": "68f15c0e2720628e57fb4735bee0f8bfcae06850",
+          "version": "0.4.0"
+        }
+      },
+      {
+        "package": "CMSSupport",
+        "repositoryURL": "https://github.com/BiAffectBridge/CMSSupport.git",
+        "state": {
+          "branch": null,
+          "revision": "99ef4bcead679b83ee6b5414fd79992478f6c311",
+          "version": "1.2.3"
+        }
+      },
+      {
+        "package": "JsonModel",
+        "repositoryURL": "https://github.com/BiAffectBridge/JsonModel-Swift.git",
+        "state": {
+          "branch": null,
+          "revision": "3274a1192148b9652885d4a6baa50462ae9842b8",
+          "version": "2.2.2"
+        }
+      },
+      {
+        "package": "MobilePassiveData",
+        "repositoryURL": "https://github.com/BiAffectBridge/MobilePassiveData-SDK.git",
+        "state": {
+          "branch": null,
+          "revision": "a766738b422ae2f0a894b63bf823f252b3c1545e",
+          "version": "1.6.0"
+        }
+      },
+      {
+        "package": "ZIPFoundation",
+        "repositoryURL": "https://github.com/weichsel/ZIPFoundation.git",
+        "state": {
+          "branch": null,
+          "revision": "02b6abe5f6eef7e3cbd5f247c5cc24e246efcfe0",
+          "version": "0.9.19"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
