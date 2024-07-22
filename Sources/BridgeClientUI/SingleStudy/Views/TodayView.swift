@@ -19,39 +19,69 @@ public struct TodayView: View {
     }
     
     public var body: some View {
-        GenericTodayWrapperView<TodayFinishedView>(viewModel: viewModel)
-            .onAppear {
-                viewModel.onAppear(bridgeManager: bridgeManager, previewSchedules: previewSchedules)
-            }
+        GenericTodayView(bridgeManager: bridgeManager, viewModel: viewModel, previewSchedules: previewSchedules)
     }
 }
 
 /// A simplified "today" view.
 /// - Note: This is currently only used by the BiAffect app.
+@available(*, deprecated)
 public struct TodayWrapperView: View {
     @ObservedObject private var viewModel: TodayTimelineViewModel
+    @State private var isUploading: Bool = false
     
     public init(viewModel: TodayTimelineViewModel) {
         self.viewModel = viewModel
     }
     
     public var body: some View {
-        GenericTodayWrapperView<TodayUpToDateView>(viewModel: viewModel)
+        GenericTodayWrapperView(viewModel: viewModel, isUploading: $isUploading) {
+            EmptyView()
+        }
+    }
+}
+
+public struct GenericTodayView : View {
+    @ObservedObject private var bridgeManager: AbstractSingleStudyAppManager
+    @ObservedObject private var viewModel: AbstractTodayTimelineViewModel
+    private let previewSchedules: [NativeScheduledSessionWindow]
+    
+    public init(bridgeManager: AbstractSingleStudyAppManager, viewModel: AbstractTodayTimelineViewModel, previewSchedules: [NativeScheduledSessionWindow] = []) {
+        self.bridgeManager = bridgeManager
+        self.viewModel = viewModel
+        self.previewSchedules = previewSchedules
+    }
+    
+    public var body: some View {
+        GenericTodayWrapperView(viewModel: viewModel, isUploading: $bridgeManager.isUploading) {
+            UploadingMessageView(networkStatus: $bridgeManager.networkStatus,
+                                 isNextSessionSoon: viewModel.isNextSessionSoon)
+        }
+        .onAppear {
+            viewModel.onAppear(bridgeManager: bridgeManager, previewSchedules: previewSchedules)
+        }
     }
 }
 
 /// A version of the Today view that can handle a generic view for the header when there are no assessments *currently* available.
-public struct GenericTodayWrapperView<TodayFinishedContent : TodayFinishedViewProtocol>: View {
+public struct GenericTodayWrapperView<HeaderContent : View>: View {
     @ObservedObject private var viewModel: AbstractTodayTimelineViewModel
+    @Binding var isUploading: Bool
+    private let headerContent: HeaderContent
     
-    public init(viewModel: AbstractTodayTimelineViewModel) {
+    public init(viewModel: AbstractTodayTimelineViewModel, isUploading: Binding<Bool>, _ headerContent: @escaping () -> HeaderContent) {
         self.viewModel = viewModel
+        self._isUploading = isUploading
+        self.headerContent = headerContent()
     }
     
     public var body: some View {
         ScreenBackground {
             VStack {
                 dateHeader()
+                if isUploading {
+                    headerContent
+                }
                 CustomScrollView {
                     VStack(spacing: 16) {
                         ForEach(TodayTimelineSession.SessionState.allCases, id: \.rawValue) { state in
@@ -67,8 +97,8 @@ public struct GenericTodayWrapperView<TodayFinishedContent : TodayFinishedViewPr
                                     }
                                 }// Section state
                             }
-                            else if state == .availableNow, !viewModel.isLoading {
-                                TodayFinishedContent()
+                            else if state == .availableNow, !viewModel.isLoading, !isUploading {
+                                TodayFinishedView()
                             }
                         }// end ForEach state
                         Spacer()
