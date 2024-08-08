@@ -46,8 +46,8 @@ actor BackgroundProcessSyncManager {
     /// background.
     @MainActor
     func onLaunch(backgroundProcessId: String?) {
-        // Register the background process
-        if let backgroundProcessId = backgroundProcessId {
+        // Register the background process, but only if this isn't running in an app extension.
+        if let backgroundProcessId = backgroundProcessId, !AppUtils.isRunningInAppExtension {
             registerBackgroundTasks(backgroundProcessId)
         }
         setupAppListeners()

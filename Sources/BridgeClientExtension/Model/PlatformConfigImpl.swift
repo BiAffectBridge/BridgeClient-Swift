@@ -69,6 +69,21 @@ extension IOSBridgeConfig {
     }
 }
 
+final class AppUtils {
+    static var isRunningInAppExtension: Bool {
+        // "An app extension target’s Info.plist file identifies the extension point and may specify some details
+        // about your extension. At a minimum, the file includes the NSExtension key and a dictionary of keys and
+        // values that the extension point specifies."
+        // (see https://developer.apple.com/library/content/documentation/General/Conceptual/ExtensibilityPG/ExtensionCreation.html)
+        // We also double-check that the Bundle OS Type Code is not APPL, just to be sure they haven't for some
+        // reason added that key to their app's infoDict.
+        guard let infoDict = Bundle.main.infoDictionary,
+              let packageType = infoDict["CFBundlePackageType"] as? String
+            else { return false }
+        return (packageType != "APPL") && infoDict["NSExtension"] != nil
+    }
+}
+
 extension Bundle {
     /// The localized name of this application.
     /// This method looks at the plist for the main bundle and returns the most
