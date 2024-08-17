@@ -322,8 +322,8 @@ open class UploadAppManager : ObservableObject {
         Logger.log(severity: .info, message: "Getting current session state")
         let userState = self.authManager.sessionState()
         self.userSessionInfo.loginError = userState.error
-        if userState.error == nil {
-            // Only update during launch if the call did not throw an exception.
+        if let session = userState.sessionInfo {
+            // Only update during launch if the session is non-nil.
             // Otherwise, we have to wait until the observer comes back.
             self.updateUserSessionStatus(session, updateType: .launch)
         }
