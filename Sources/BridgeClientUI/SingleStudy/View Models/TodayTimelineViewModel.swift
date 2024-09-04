@@ -30,6 +30,8 @@ open class AbstractTodayTimelineViewModel : NSObject, ObservableObject, Schedule
     @Published open var isLoading: Bool = true
     /// Is the next session soon?
     @Published open var isNextSessionSoon: Bool = false
+    /// Is there a session available now?
+    @Published open var hasSessionAvailableNow: Bool = false
     
     /// A flag that can be used to set whether or not a view is presenting the assessment. How the assessment is
     /// presented is up to the views built specifically for a given application.
@@ -56,6 +58,7 @@ open class AbstractTodayTimelineViewModel : NSObject, ObservableObject, Schedule
                 return existingSession
             }
             let sessions = filterSessions(newSessions)
+            self.hasSessionAvailableNow = sessions.contains(where: { $0.state == .availableNow })
             let upNext = sessions.first(where: { $0.state == .upNext })
             self.isNextSessionSoon = upNext?.window.startDateTime.isWithinDays(7) ?? false
             self.sessions = sessions

@@ -9,8 +9,18 @@ import BridgeClientExtension
 struct UploadingMessageView : View {
     @Binding var networkStatus: NetworkStatus
     let isNextSessionSoon: Bool
+    let hasSessionAvailableNow: Bool
     
     var body: some View {
+        if networkStatus.contains(.notConnected) || !hasSessionAvailableNow {
+            uploadingView()
+        } else {
+            EmptyView()
+        }
+    }
+        
+    @ViewBuilder
+    func uploadingView() -> some View {
         VStack(alignment: .center, spacing: 24) {
             if networkStatus.contains(.notConnected) {
                 Image(systemName: "wifi.exclamationmark")
@@ -20,7 +30,7 @@ struct UploadingMessageView : View {
                 progressSpinner()
             }
             uploadingMessageText()
-                .font(.italicLatoFont(22))
+                .italic()
         }
         .padding()
     }
@@ -44,7 +54,7 @@ struct UploadingMessageView : View {
         case .notConnected:
             Text("Please connect to the internet to upload your results.", bundle: .module)
         default:
-            if isNextSessionSoon {
+            if isNextSessionSoon || hasSessionAvailableNow {
                 Text("Your results are uploading...", bundle: .module)
             } else {
                 Text("Your results are uploading. Please wait to close the app.", bundle: .module)
@@ -57,13 +67,19 @@ struct UploadingMessageView : View {
 fileprivate struct PreviewUploadingMessageView : View {
     @State var networkStatus: NetworkStatus = .notConnected
     @State var isNextSessionSoon: Bool = true
+    @State var hasSessionAvailableNow: Bool = false
     
     var body: some View {
         VStack {
-            UploadingMessageView(networkStatus: $networkStatus, isNextSessionSoon: isNextSessionSoon)
+            UploadingMessageView(
+                networkStatus: $networkStatus,
+                isNextSessionSoon: isNextSessionSoon,
+                hasSessionAvailableNow: hasSessionAvailableNow
+            )
             Spacer()
             Form {
                 Toggle("isNextSessionSoon", isOn: $isNextSessionSoon)
+                Toggle("hasSessionAvailableNow", isOn: $hasSessionAvailableNow)
                 Picker("Network Connection", selection: $networkStatus) {
                     ForEach(NetworkStatus.allCases, id: \.self) { value in
                         Text(value.stringValue)
