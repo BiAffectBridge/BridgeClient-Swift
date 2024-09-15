@@ -231,6 +231,11 @@ class UploadManager : NSObject, BridgeURLSessionHandler, BackgroundProcessSyncDe
     
     private func startS3Upload(_ uploadSession: S3UploadSession) {
         let fileURL = sandboxFileManager.fileURL(of: uploadSession.filePath)
+        // Belt-and-suspenders: Check that the file exists - this will log an error in the cleanup.
+        guard sandboxFileManager.fileExists(at: fileURL) else {
+            handleUnrecoverableFailure(filePath: uploadSession.filePath)
+            return
+        }
         let taskIdentifier = urlUploadTaskIdentifier(filePath: uploadSession.filePath, uploadSessionId: uploadSession.uploadSessionId)
         backgroundNetworkManager.uploadFile(fileURL,
                                             httpHeaders: uploadSession.requestHeaders,
