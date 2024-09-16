@@ -264,6 +264,10 @@ class MockSandboxFileManager : SandboxFileManager {
         baseURL.appendingPathComponent(subdir, isDirectory: true)
     }
     
+    override func fileExists(at url: URL) -> Bool {
+        fileContentLength(url) != nil
+    }
+    
     func setupFakeArchive() -> (URL, AssessmentScheduleInfo, Date) {
         let now = Date()
         let schedule = AssessmentScheduleInfo(

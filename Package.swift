@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.8
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -7,7 +7,7 @@ let package = Package(
     name: "BridgeClient",
     defaultLocalization: "en",
     platforms: [
-        .iOS(.v14),
+        .iOS(.v16),
         .macOS(.v11),
     ],
     products: [
@@ -45,6 +45,7 @@ let package = Package(
         .target(name: "BridgeClientExtension",
                 dependencies: [
                     "BridgeClient",
+                    "BridgeExceptionHandler",
                     .product(name: "BridgeArchiver", package: "BridgeArchiver-Swift"),
                     .product(name: "JsonModel", package: "JsonModel-Swift"),
                 ]),
@@ -69,5 +70,10 @@ let package = Package(
                         "BridgeClient",
                         "BridgeClientUI",
                     ]),
+        
+        // Changes exceptions into errors so that the app doesn't crash. This is pulled into a
+        // separate module b/c packages can have either Swift or Obj-c.
+        .target(name: "BridgeExceptionHandler",
+                dependencies: []),
     ]
 )

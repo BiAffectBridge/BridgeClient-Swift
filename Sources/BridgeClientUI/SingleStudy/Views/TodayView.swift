@@ -54,8 +54,11 @@ public struct GenericTodayView : View {
     
     public var body: some View {
         GenericTodayWrapperView(viewModel: viewModel, isUploading: $bridgeManager.isUploading) {
-            UploadingMessageView(networkStatus: $bridgeManager.networkStatus,
-                                 isNextSessionSoon: viewModel.isNextSessionSoon)
+            UploadingMessageView(
+                networkStatus: $bridgeManager.networkStatus,
+                isNextSessionSoon: viewModel.isNextSessionSoon,
+                hasSessionAvailableNow: viewModel.hasSessionAvailableNow
+            )
         }
         .onAppear {
             viewModel.onAppear(bridgeManager: bridgeManager, previewSchedules: previewSchedules)

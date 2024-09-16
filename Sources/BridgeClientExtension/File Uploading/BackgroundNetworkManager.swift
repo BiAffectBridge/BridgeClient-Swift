@@ -5,6 +5,7 @@
 
 import Foundation
 import BridgeClient
+import BridgeExceptionHandler
 import JsonModel
 
 protocol URLSessionBackgroundDelegate: URLSessionDataDelegate, URLSessionDownloadDelegate {
@@ -231,9 +232,21 @@ class BackgroundNetworkManager: NSObject, URLSessionBackgroundDelegate, BridgeUR
         var request = URLRequest(url: url)
         request.allHTTPHeaderFields = httpHeaders
         request.httpMethod = HTTPMethod.PUT.rawValue
-        let task = backgroundSession().uploadTask(with: request, fromFile: fileURL)
-        task.taskDescription = taskDescription
-        task.resume()
+        
+        // Belt and suspenders - NSURLSession can throw an unhelpful crashing exception, possibly related to a
+        // spotty WiFi connection. Log the exception but do not crash the app. syoung 09/15/2024
+        do {
+            try ExceptionHandler.try {
+                let task = self.backgroundSession().uploadTask(with: request, fromFile: fileURL)
+                task.taskDescription = taskDescription
+                task.resume()
+            }
+        } catch {
+            // Do not crash the app if the upload fails
+            Logger.log(tag: .upload, error: error, message: "Failed to create background upload task.")
+            return false
+        }
+
         return true
     }
     
